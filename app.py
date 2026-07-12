@@ -1,5 +1,5 @@
 # app.py - Customer Churn Prediction Dashboard
-# Final Version - Plotly SHAP, Theme-Aware, Clean Decimals
+# Final Version - Clean Plotly SHAP, No Zoom, No Numbers
 # Tech Stack: XGBoost, SHAP, Streamlit, Plotly
 
 import streamlit as st
@@ -302,9 +302,6 @@ if uploaded_file is not None:
                 y=feature_importance['Feature'],
                 orientation='h',
                 marker=dict(color='#667eea', line=dict(color='rgba(0,0,0,0)', width=0)),
-                text=feature_importance['Importance'].round(3),
-                textposition='outside',
-                textfont=dict(size=12),
                 hovertemplate='<b>%{y}</b><br>Avg Impact: %{x:.3f}<extra></extra>'
             )
         ])
@@ -324,10 +321,16 @@ if uploaded_file is not None:
             plot_bgcolor='rgba(0,0,0,0)',
             font=dict(family='Inter'),
             showlegend=False,
-            xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
+            xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
+            dragmode=False
         )
 
-        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.plotly_chart(fig, use_container_width=True, config={
+            'displayModeBar': False,
+            'scrollZoom': False,
+            'doubleClick': False,
+            'showTips': False
+        })
 
     st.info("**Key Findings:** Contract type, Tenure, and MonthlyCharges are the strongest predictors of churn. Month-to-month contracts with low tenure and high charges indicate highest risk.")
 
