@@ -1,6 +1,6 @@
 # app.py - Customer Churn Prediction Dashboard
 # Tech Stack: XGBoost, SHAP, Streamlit, Plotly
-# Professional Corporate Version - Light/Dark Compatible
+# Professional Corporate Version - Theme Aware + Attractive
 
 import streamlit as st
 import pandas as pd
@@ -18,11 +18,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional Corporate CSS - Theme Aware
+# Professional Corporate CSS - Theme Aware + Beautiful Cards
 st.markdown("""
 <style>
     /* Professional Blue Header */
-.main-header {
+   .main-header {
         font-size: 2.5rem;
         font-weight: 700;
         color: #1f77b4;
@@ -32,7 +32,7 @@ st.markdown("""
         border-bottom: 3px solid #1f77b4;
     }
     /* Subheader styling */
-.sub-header {
+   .sub-header {
         text-align: center;
         color: var(--text-color);
         opacity: 0.7;
@@ -41,7 +41,7 @@ st.markdown("""
         font-weight: 400;
     }
     /* Button styling - Corporate Blue */
-.stButton>button {
+   .stButton>button {
         background-color: #1f77b4;
         color: white;
         border: none;
@@ -50,9 +50,38 @@ st.markdown("""
         font-weight: 600;
         font-size: 0.95rem;
     }
-.stButton>button:hover {
+   .stButton>button:hover {
         background-color: #155a8a;
         border: none;
+    }
+    /* Sidebar Metric Cards - Attractive + Theme Aware */
+   .sidebar-metric-card {
+        background-color: var(--secondary-background-color);
+        padding: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid rgba(128,128,128,0.2);
+        margin-bottom: 0.6rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        transition: transform 0.2s;
+    }
+   .sidebar-metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+    }
+   .sidebar-metric-label {
+        color: var(--text-color);
+        opacity: 0.6;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+   .sidebar-metric-value {
+        color: var(--text-color);
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin: 0.3rem 0 0 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -94,28 +123,49 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("### 📈 Model Performance")
-    
-    # ✅ THEME-AWARE METRICS - st.metric vadina
+
+    # ✅ ATTRACTIVE + THEME-AWARE SIDEBAR CARDS
     col1, col2 = st.columns(2)
     with col1:
-        st.metric(label="ROC-AUC", value="0.82")
-        st.metric(label="Precision", value="0.65")
+        st.markdown('<div class="sidebar-metric-card"><p class="sidebar-metric-label">ROC-AUC</p><p class="sidebar-metric-value">0.82</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-metric-card"><p class="sidebar-metric-label">Precision</p><p class="sidebar-metric-value">0.65</p></div>', unsafe_allow_html=True)
     with col2:
-        st.metric(label="Accuracy", value="79.2%")
-        st.metric(label="Recall", value="0.58")
+        st.markdown('<div class="sidebar-metric-card"><p class="sidebar-metric-label">Accuracy</p><p class="sidebar-metric-value">79.2%</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-metric-card"><p class="sidebar-metric-label">Recall</p><p class="sidebar-metric-value">0.58</p></div>', unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown("### 🔗 Project Links")
     st.markdown("[GitHub Repository](https://github.com/EvuriVyshnavi/customer-churn-prediction)")
     st.markdown("[LinkedIn Profile](https://www.linkedin.com/in/evuri-vyshnavi/)")
 
-# Helper function for theme-aware metric cards - Main page lo vadukovali
+# Helper function for Main Page KPI Cards - Theme Aware + Attractive
 def metric_card(label, value, delta, delta_color="#999"):
     return f"""
-    <div style="background-color: var(--secondary-background-color); padding: 1.2rem; border-radius: 8px; border: 1px solid rgba(128,128,128,0.2); height: 130px; display: flex; flex-direction: column; justify-content: space-between;">
-        <p style="color: var(--text-color); opacity: 0.7; font-size: 0.85rem; margin: 0; text-transform: uppercase; font-weight: 600;">{label}</p>
-        <p style="color: var(--text-color); font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">{value}</p>
-        <p style="color: {delta_color}; font-size: 0.8rem; margin: 0;">{delta}</p>
+    <div style="background-color: var(--secondary-background-color);
+                padding: 1.3rem;
+                border-radius: 10px;
+                border: 1px solid rgba(128,128,128,0.2);
+                height: 140px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                transition: transform 0.2s;">
+        <p style="color: var(--text-color);
+                  opacity: 0.7;
+                  font-size: 0.85rem;
+                  margin: 0;
+                  text-transform: uppercase;
+                  font-weight: 600;
+                  letter-spacing: 0.5px;">{label}</p>
+        <p style="color: var(--text-color);
+                  font-size: 2.2rem;
+                  font-weight: 700;
+                  margin: 0.5rem 0;">{value}</p>
+        <p style="color: {delta_color};
+                  font-size: 0.8rem;
+                  margin: 0;
+                  font-weight: 500;">{delta}</p>
     </div>
     """
 
@@ -174,7 +224,7 @@ if uploaded_file is not None:
 
     st.markdown("---")
 
-    # Section 2: Key Business Metrics - CUSTOM THEME-AWARE CARDS
+    # Section 2: Key Business Metrics - ATTRACTIVE KPI CARDS
     st.markdown("### 📊 2. Key Business Metrics")
     st.write("")
 
@@ -184,7 +234,8 @@ if uploaded_file is not None:
         st.markdown(metric_card(
             "Total Customers",
             f"{len(df):,}",
-            "Active Base"
+            "Active Base",
+            "var(--text-color)"
         ), unsafe_allow_html=True)
 
     with col2:
@@ -310,7 +361,7 @@ if uploaded_file is not None:
         fig, ax = plt.subplots(figsize=(10, 6))
         fig.patch.set_alpha(0)
         ax.set_facecolor('none')
-        
+
         shap.summary_plot(
             shap_values,
             df_copy,
