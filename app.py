@@ -1,12 +1,12 @@
 # app.py - Customer Churn Prediction Dashboard
-# Final Version - Theme Aware SHAP Plot Text
+# Final Version - Plotly SHAP for Theme-Aware Text
 # Tech Stack: XGBoost, SHAP, Streamlit, Plotly
 
 import streamlit as st
 import pandas as pd
 import pickle
 import shap
-import matplotlib.pyplot as plt
+import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -291,36 +291,45 @@ if uploaded_file is not None:
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_copy)
 
-        # ✅ THEME DETECTION - DARK = WHITE TEXT, LIGHT = BLACK TEXT
-        theme = st.get_option("theme.base")
-        text_color = '#FFFFFF' if theme == 'dark' else '#000000'
-        bar_color = '#667eea'
+        # ✅ PLOTLY - THEME AWARE AUTOMATICALLY
+        feature_importance = pd.DataFrame({
+            'Feature': df_copy.columns,
+            'Importance': np.abs(shap_values).mean(0)
+        }).sort_values('Importance', ascending=True).tail(10)
 
-        fig, ax = plt.subplots(figsize=(10, 6))
-        fig.patch.set_alpha(0)
-        ax.set_facecolor('none')
+        fig = go.Figure(data=[
+            go.Bar(
+                x=feature_importance['Importance'],
+                y=feature_importance['Feature'],
+                orientation='h',
+                marker=dict(
+                    color='#667eea',
+                    line=dict(color='rgba(0,0,0,0)', width=0)
+                ),
+                text=feature_importance['Importance'].round(3),
+                textposition='outside',
+                hovertemplate='<b>%{y}</b><br>Avg Impact: %{x:.3f}<extra></extra>'
+            )
+        ])
 
-        shap.summary_plot(shap_values, df_copy, plot_type="bar", show=False, color=bar_color)
+        fig.update_layout(
+            title={
+                'text': "Top Features Driving Churn Predictions",
+                'x': 0.5,
+                'xanchor': 'center',
+                'font': {'size': 16, 'family': 'Inter'}
+            },
+            xaxis_title="Mean |SHAP Value| (Average Impact)",
+            yaxis_title="",
+            height=500,
+            margin=dict(t=60, b=40, l=20, r=20),
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font=dict(family='Inter'),
+            showlegend=False
+        )
 
-        # All text elements use text_color
-        plt.title("Top Features Driving Churn Predictions", fontsize=14, pad=20, weight='bold', color=text_color)
-        plt.xlabel("Mean |SHAP Value| (Average Impact on Model Output)", fontsize=11, color=text_color)
-
-        ax.tick_params(colors=text_color, which='both')
-        ax.xaxis.label.set_color(text_color)
-        ax.yaxis.label.set_color(text_color)
-
-        for label in ax.get_yticklabels():
-            label.set_color(text_color)
-        for label in ax.get_xticklabels():
-            label.set_color(text_color)
-
-        for spine in ax.spines.values():
-            spine.set_color(text_color)
-
-        plt.tight_layout()
-        st.pyplot(fig)
-        plt.clf()
+        st.plotly_chart(fig, use_container_width=True)
 
     st.info("**Key Findings:** Contract type, Tenure, and MonthlyCharges are the strongest predictors of churn. Month-to-month contracts with low tenure and high charges indicate highest risk.")
 
