@@ -1,6 +1,6 @@
 # app.py - Customer Churn Prediction Dashboard
 # Tech Stack: XGBoost, SHAP, Streamlit, Plotly
-# Professional Corporate Version - Dark Mode Compatible
+# Professional Corporate Version - Light/Dark Compatible
 
 import streamlit as st
 import pandas as pd
@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Professional Corporate CSS - Dark Mode Compatible
+# Professional Corporate CSS - Theme Aware
 st.markdown("""
 <style>
     /* Professional Blue Header */
@@ -34,7 +34,8 @@ st.markdown("""
     /* Subheader styling */
 .sub-header {
         text-align: center;
-        color: #888;
+        color: var(--text-color);
+        opacity: 0.7;
         font-size: 1.05rem;
         margin-bottom: 2rem;
         font-weight: 400;
@@ -52,20 +53,6 @@ st.markdown("""
 .stButton>button:hover {
         background-color: #155a8a;
         border: none;
-    }
-    /* Sidebar background */
-.css-1d391kg {
-        background-color: #1e1e1e;
-    }
-    /* Dataframe styling */
-.dataframe {
-        border: 1px solid #444;
-    }
-    /* Info boxes */
-.stAlert {
-        border-radius: 6px;
-        background-color: #262730;
-        border: 1px solid #444;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -96,7 +83,7 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.markdown("### 🛠️ Technology Stack")
+    st.markdown("### 🛠 Technology Stack")
     st.markdown("""
     - **Model:** XGBoost Classifier
     - **Imbalance:** SMOTE Oversampling
@@ -107,22 +94,27 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("### 📈 Model Performance")
-    st.info("**ROC-AUC Score:** 0.82")
-    st.info("**Accuracy:** 79.2%")
-    st.info("**Precision:** 0.65")
-    st.info("**Recall:** 0.58")
+    
+    # ✅ THEME-AWARE METRICS - Light/Dark rendu lo work avthundi
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(label="ROC-AUC", value="0.82")
+        st.metric(label="Precision", value="0.65")
+    with col2:
+        st.metric(label="Accuracy", value="79.2%")
+        st.metric(label="Recall", value="0.58")
 
     st.markdown("---")
     st.markdown("### 🔗 Project Links")
-    st.markdown("[[GitHub Repository](https://github.com/EvuriVyshnavi/customer-churn-prediction)](https://github.com/EvuriVyshnavi/customer-churn-prediction)")
-    st.markdown("[[LinkedIn Profile](https://www.linkedin.com/in/evuri-vyshnavi/)](https://www.linkedin.com/in/evuri-vyshnavi/)")
+    st.markdown("[GitHub Repository](https://github.com/EvuriVyshnavi/customer-churn-prediction)")
+    st.markdown("[LinkedIn Profile](https://www.linkedin.com/in/evuri-vyshnavi/)")
 
-# Helper function for dark mode metric cards
+# Helper function for theme-aware metric cards - Main page lo vadukovali
 def metric_card(label, value, delta, delta_color="#999"):
     return f"""
-    <div style="background-color: #262730; padding: 1.2rem; border-radius: 8px; border: 1px solid #444; height: 130px; display: flex; flex-direction: column; justify-content: space-between;">
-        <p style="color: #999; font-size: 0.85rem; margin: 0; text-transform: uppercase; font-weight: 600;">{label}</p>
-        <p style="color: #fafafa; font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">{value}</p>
+    <div style="background-color: var(--secondary-background-color); padding: 1.2rem; border-radius: 8px; border: 1px solid rgba(128,128,128,0.2); height: 130px; display: flex; flex-direction: column; justify-content: space-between;">
+        <p style="color: var(--text-color); opacity: 0.7; font-size: 0.85rem; margin: 0; text-transform: uppercase; font-weight: 600;">{label}</p>
+        <p style="color: var(--text-color); font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">{value}</p>
         <p style="color: {delta_color}; font-size: 0.8rem; margin: 0;">{delta}</p>
     </div>
     """
@@ -235,7 +227,7 @@ if uploaded_file is not None:
             hole=0.45,
             marker=dict(
                 colors=['#2ca02c', '#ff7f0e', '#d62728'],
-                line=dict(color='#1e1e1e', width=2)
+                line=dict(color='rgba(0,0,0,0)', width=2)
             ),
             textposition='inside',
             textinfo='percent+label',
@@ -248,12 +240,12 @@ if uploaded_file is not None:
             margin=dict(t=20, b=20, l=20, r=20),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#fafafa'),
+            font=dict(color='var(--text-color)'),
             annotations=[dict(
                 text='Risk<br>Segments',
                 x=0.5, y=0.5,
                 font_size=16,
-                font_color='#fafafa',
+                font_color='var(--text-color)',
                 showarrow=False
             )],
             legend=dict(
@@ -262,7 +254,7 @@ if uploaded_file is not None:
                 y=-0.1,
                 xanchor="center",
                 x=0.5,
-                font=dict(color='#fafafa')
+                font=dict(color='var(--text-color)')
             )
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -314,12 +306,11 @@ if uploaded_file is not None:
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_copy)
 
-        # Set matplotlib dark theme
-        plt.style.use('dark_background')
+        # Theme-aware plot
         fig, ax = plt.subplots(figsize=(10, 6))
-        fig.patch.set_facecolor('#0e1117')
-        ax.set_facecolor('#0e1117')
-
+        fig.patch.set_alpha(0)
+        ax.set_facecolor('none')
+        
         shap.summary_plot(
             shap_values,
             df_copy,
@@ -327,13 +318,11 @@ if uploaded_file is not None:
             show=False,
             color='#1f77b4'
         )
-        plt.title("Top Features Driving Churn Predictions", fontsize=14, pad=20, weight='bold', color='white')
-        plt.xlabel("Mean |SHAP Value| (Average Impact on Model Output)", fontsize=11, color='white')
-        ax.tick_params(colors='white')
+        plt.title("Top Features Driving Churn Predictions", fontsize=14, pad=20, weight='bold')
+        plt.xlabel("Mean |SHAP Value| (Average Impact on Model Output)", fontsize=11)
         plt.tight_layout()
         st.pyplot(fig)
         plt.clf()
-        plt.style.use('default')
 
     st.info("""
     **Key Findings:** Contract type, Tenure, and MonthlyCharges are the strongest predictors of churn.
@@ -404,6 +393,6 @@ else:
 # Footer
 st.markdown("---")
 st.markdown(
-    "<p style='text-align: center; color: #888; font-size: 0.9rem;'>Customer Churn Analytics Platform | Powered by XGBoost + SHAP + Streamlit</p>",
+    "<p style='text-align: center; color: var(--text-color); opacity: 0.6; font-size: 0.9rem;'>Customer Churn Analytics Platform | Powered by XGBoost + SHAP + Streamlit</p>",
     unsafe_allow_html=True
 )
