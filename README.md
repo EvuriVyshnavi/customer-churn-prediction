@@ -8,11 +8,11 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ### 🚀 Live Demo
-**[View Deployed App](https://your-username-customer-churn-prediction.streamlit.app)** ← Deploy ayyaka ee link marchu
+**[View Deployed App]([https://your-username-customer-churn-prediction.streamlit.app](https://vyshnavi-customer-churn-prediction.streamlit.app/))** ← Deploy ayyaka ee link marchu
 
 ---
 
-## 📌 Problem Statement
+## 📌 Problem Statemen0
 Telecom companies lose **15-25%** of customers annually to churn. Identifying high-risk customers early enables proactive retention strategies, saving **₹24,000/year** per customer.
 
 ## 🎯 Solution
@@ -61,15 +61,6 @@ This dashboard uses **XGBoost + SMOTE + SHAP** to:
 
 ---
 
-## 📊 Screenshots
-
-| Dashboard Overview | SHAP Feature Importance |
-| --- | --- |
-| ![Dashboard](https://via.placeholder.com/400x250.png?text=Add+Screenshot+Here) | ![SHAP](https://via.placeholder.com/400x250.png?text=Add+SHAP+Plot) |
-
-*Replace placeholder images with actual screenshots after deployment*
-
----
 
 ## 💻 Run Locally
 
