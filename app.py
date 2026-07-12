@@ -1,5 +1,5 @@
 # app.py - Customer Churn Prediction Dashboard
-# Final Version - Plotly SHAP for Theme-Aware Text
+# Final Version - Plotly SHAP, Theme-Aware, Clean Decimals
 # Tech Stack: XGBoost, SHAP, Streamlit, Plotly
 
 import streamlit as st
@@ -128,7 +128,7 @@ with st.sidebar:
     - **Model:** XGBoost Classifier
     - **Imbalance:** SMOTE Oversampling
     - **Explainability:** SHAP Values
-    - **Visualization:** Plotly, Matplotlib
+    - **Visualization:** Plotly
     - **Framework:** Streamlit
     """)
 
@@ -249,7 +249,7 @@ if uploaded_file is not None:
             annotations=[dict(text='Risk<br>Segments', x=0.5, y=0.5, font_size=18, font_color='var(--text-color)', showarrow=False)],
             legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     with col2:
         st.markdown("#### 💡 Business Insights")
@@ -291,7 +291,6 @@ if uploaded_file is not None:
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_copy)
 
-        # ✅ PLOTLY - THEME AWARE AUTOMATICALLY
         feature_importance = pd.DataFrame({
             'Feature': df_copy.columns,
             'Importance': np.abs(shap_values).mean(0)
@@ -302,12 +301,10 @@ if uploaded_file is not None:
                 x=feature_importance['Importance'],
                 y=feature_importance['Feature'],
                 orientation='h',
-                marker=dict(
-                    color='#667eea',
-                    line=dict(color='rgba(0,0,0,0)', width=0)
-                ),
+                marker=dict(color='#667eea', line=dict(color='rgba(0,0,0,0)', width=0)),
                 text=feature_importance['Importance'].round(3),
                 textposition='outside',
+                textfont=dict(size=12),
                 hovertemplate='<b>%{y}</b><br>Avg Impact: %{x:.3f}<extra></extra>'
             )
         ])
@@ -326,10 +323,11 @@ if uploaded_file is not None:
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             font=dict(family='Inter'),
-            showlegend=False
+            showlegend=False,
+            xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
 
     st.info("**Key Findings:** Contract type, Tenure, and MonthlyCharges are the strongest predictors of churn. Month-to-month contracts with low tenure and high charges indicate highest risk.")
 
