@@ -5,4 +5,8 @@ scikit-learn==1.4.2
 xgboost==2.0.3
 shap==0.45.0
 matplotlib==3.9.0
+<<<<<<< HEAD
 plotly==5.22.0
+=======
+plotly==5.22.0
+>>>>>>> da49259e3a0dd1c70493812db4e0b6478a05b6aa
