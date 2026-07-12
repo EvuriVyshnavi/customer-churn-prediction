@@ -1,5 +1,6 @@
 # app.py - Customer Churn Prediction Dashboard
-# Premium Beautiful Version - Colorful Cards + Theme Aware
+# Tech Stack: XGBoost, SHAP, Streamlit, Plotly
+# Premium Beautiful Version - Gradient Cards + Dark/Light Compatible
 
 import streamlit as st
 import pandas as pd
@@ -9,6 +10,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 
+# Page configuration
 st.set_page_config(
     page_title="Customer Churn Analytics",
     page_icon="📊",
@@ -16,14 +18,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Premium CSS - Beautiful Gradients + Cards
+# Premium Corporate CSS - Beautiful + Theme Aware
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
     /* Gradient Header */
-  .main-header {
+ .main-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -32,34 +34,38 @@ st.markdown("""
         font-weight: 700;
         text-align: center;
         padding: 1.5rem 0 0.5rem 0;
+        margin-bottom: 0.5rem;
     }
 
-  .sub-header {
+ .sub-header {
         text-align: center;
         color: var(--text-color);
         opacity: 0.7;
         font-size: 1.1rem;
         margin-bottom: 2.5rem;
+        font-weight: 400;
     }
 
     /* Gradient Button */
-  .stButton>button {
+ .stButton>button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
         border-radius: 8px;
         padding: 0.7rem 2.5rem;
         font-weight: 600;
+        font-size: 0.95rem;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         transition: all 0.3s ease;
     }
-  .stButton>button:hover {
+ .stButton>button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        border: none;
     }
 
     /* Beautiful Sidebar Cards */
-  .sidebar-card {
+ .sidebar-card {
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
         padding: 1rem;
         border-radius: 12px;
@@ -68,20 +74,21 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
         transition: all 0.3s ease;
     }
-  .sidebar-card:hover {
+ .sidebar-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
         border: 1px solid rgba(102, 126, 234, 0.5);
     }
-  .sidebar-label {
+ .sidebar-label {
         color: var(--text-color);
         opacity: 0.7;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
+        margin: 0;
         letter-spacing: 1px;
     }
-  .sidebar-value {
+ .sidebar-value {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -93,9 +100,25 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<p class="main-header">📊 Customer Churn Prediction Dashboard</p>', unsafe_allow_html=True)
+# Header with graph icon
+st.markdown('''
+<p class="main-header">
+<svg width="40" height="40" viewBox="0 0 24 24" style="display:inline; vertical-align:middle; margin-right:10px;">
+<defs>
+<linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+</linearGradient>
+</defs>
+<rect x="3" y="14" width="4" height="7" fill="url(#grad)" rx="1"/>
+<rect x="10" y="10" width="4" height="11" fill="url(#grad)" rx="1"/>
+<rect x="17" y="3" width="4" height="18" fill="url(#grad)" rx="1"/>
+</svg>
+Customer Churn Prediction Dashboard</p>
+''', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">Identify high-risk customer segments using XGBoost and Explainable AI</p>', unsafe_allow_html=True)
 
+# Load trained model and feature columns
 @st.cache_resource
 def load_model():
     with open('churn_model.pkl', 'rb') as f:
@@ -106,9 +129,10 @@ def load_model():
 
 model, columns = load_model()
 
+# Sidebar Configuration
 with st.sidebar:
     st.markdown("### 📁 Data Input")
-    uploaded_file = st.file_uploader("Upload Customer CSV", type="csv")
+    uploaded_file = st.file_uploader("Upload Customer CSV", type="csv", help="Upload Telco Customer Churn dataset")
 
     st.markdown("---")
     st.markdown("### 🛠 Technology Stack")
@@ -136,6 +160,7 @@ with st.sidebar:
     st.markdown("[GitHub Repository](https://github.com/EvuriVyshnavi/customer-churn-prediction)")
     st.markdown("[LinkedIn Profile](https://www.linkedin.com/in/evuri-vyshnavi/)")
 
+# Helper function - Premium KPI Cards
 def premium_card(label, value, delta, delta_color="#999", icon="📊"):
     return f"""
     <div style="
@@ -149,6 +174,7 @@ def premium_card(label, value, delta, delta_color="#999", icon="📊"):
         justify-content: space-between;
         box-shadow: 0 4px 20px rgba(102, 126, 234, 0.1);
         transition: all 0.3s ease;
+        cursor: pointer;
     " onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 30px rgba(102, 126, 234, 0.25)'"
        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(102, 126, 234, 0.1)'">
         <div style="display: flex; justify-content: space-between; align-items: start;">
@@ -160,13 +186,18 @@ def premium_card(label, value, delta, delta_color="#999", icon="📊"):
     </div>
     """
 
+# Main Content
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
+
+    # Section 1: Data Preview
     st.markdown("### 📋 Data Preview")
     st.dataframe(df.head(), use_container_width=True, height=220)
     st.caption(f"✅ Dataset loaded: {len(df):,} customers × {len(df.columns)} features")
 
+    # Data preprocessing pipeline
     df_copy = df.copy()
+
     if 'customerID' in df_copy.columns:
         customer_ids = df_copy['customerID']
         df_copy.drop('customerID', axis=1, inplace=True)
@@ -189,6 +220,7 @@ if uploaded_file is not None:
             df_copy[col] = 0
     df_copy = df_copy[columns]
 
+    # Generate predictions
     predictions = model.predict(df_copy)
     proba = model.predict_proba(df_copy)[:, 1]
 
@@ -198,22 +230,30 @@ if uploaded_file is not None:
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("---")
+
+    # Section 2: Key Business Metrics
     st.markdown("### 📊 Key Business Metrics")
     st.write("")
 
     col1, col2, col3, col4 = st.columns(4)
+
     with col1:
         st.markdown(premium_card("Total Customers", f"{len(df):,}", "Active Base", "#667eea", "👥"), unsafe_allow_html=True)
+
     with col2:
         st.markdown(premium_card("Predicted Churn", f"{int(sum(predictions)):,}", f"↑ {sum(predictions)/len(df)*100:.1f}% of base", "#ff6b6b", "⚠️"), unsafe_allow_html=True)
+
     with col3:
         st.markdown(premium_card("Churn Rate", f"{sum(predictions)/len(df)*100:.1f}%", "↓ 2.3% below industry avg", "#51cf66", "📉"), unsafe_allow_html=True)
+
     with col4:
         high_risk_count = int(sum(df['Risk_Level'] == 'High'))
         st.markdown(premium_card("High Risk", f"{high_risk_count:,}", "Immediate action needed", "#ff6b6b", "🔴"), unsafe_allow_html=True)
 
     st.write("")
     st.markdown("---")
+
+    # Section 3: Risk Distribution
     st.markdown("### 🎯 Churn Risk Distribution")
     col1, col2 = st.columns([3, 2])
 
@@ -260,6 +300,8 @@ if uploaded_file is not None:
         """, unsafe_allow_html=True)
 
     st.markdown("---")
+
+    # Section 4: High Risk Customers Table
     st.markdown("### 🚨 High Risk Customers - Priority Action List")
     high_risk = df[df['Risk_Level'] == 'High'].sort_values('Churn_Probability', ascending=False).head(20)
     high_risk_display = high_risk.copy()
@@ -271,25 +313,43 @@ if uploaded_file is not None:
     st.caption("📋 Sorted by churn probability descending. Focus retention efforts on top customers.")
 
     st.markdown("---")
+
+    # Section 5: SHAP Feature Importance - FIXED TEXT COLORS
     st.markdown("### 🔍 Feature Importance Analysis - Why Customers Churn?")
     st.write("SHAP values explain which features most influence the churn prediction model")
+
     with st.spinner('Generating SHAP explanation plots...'):
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_copy)
+
+        # ✅ FIXED: Theme-aware matplotlib with white text
         fig, ax = plt.subplots(figsize=(10, 6))
         fig.patch.set_alpha(0)
         ax.set_facecolor('none')
+
         shap.summary_plot(shap_values, df_copy, plot_type="bar", show=False, color='#667eea')
-        plt.title("Top Features Driving Churn Predictions", fontsize=14, pad=20, weight='bold')
-        plt.xlabel("Mean |SHAP Value| (Average Impact on Model Output)", fontsize=11)
+
+        # Make all text white for dark mode visibility
+        plt.title("Top Features Driving Churn Predictions", fontsize=14, pad=20, weight='bold', color='white')
+        plt.xlabel("Mean |SHAP Value| (Average Impact on Model Output)", fontsize=11, color='white')
+        ax.tick_params(colors='white', which='both')
+        ax.xaxis.label.set_color('white')
+        ax.yaxis.label.set_color('white')
+
+        for label in ax.get_yticklabels():
+            label.set_color('white')
+        for label in ax.get_xticklabels():
+            label.set_color('white')
+
         plt.tight_layout()
         st.pyplot(fig)
         plt.clf()
 
-    # ✅ BLUE INFO BOX - COLORFUL
     st.info("**Key Findings:** Contract type, Tenure, and MonthlyCharges are the strongest predictors of churn. Month-to-month contracts with low tenure and high charges indicate highest risk.")
 
     st.markdown("---")
+
+    # Section 6: Export Results
     st.markdown("### 💾 Export Results for Business Action")
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
@@ -302,7 +362,7 @@ if uploaded_file is not None:
         st.caption("💡 Export data for CRM integration, email campaigns, or retention team follow-up")
 
 else:
-    # ✅ BLUE INFO BOX - LANDING PAGE
+    # Landing page - Colorful boxes
     st.info("👆 **Upload the Telco Customer Churn CSV file from the sidebar to begin analysis**")
     st.write("")
     st.markdown("### 🎯 Dashboard Capabilities")
@@ -330,7 +390,6 @@ else:
         </div>
         """, unsafe_allow_html=True)
     st.write("")
-    # ✅ GREEN SUCCESS BOX - BOTTOM
     st.success("**Model Performance:** Trained on 7,043 customers | ROC-AUC: 0.82 | Accuracy: 79.2%")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
