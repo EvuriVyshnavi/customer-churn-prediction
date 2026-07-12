@@ -95,7 +95,7 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 📈 Model Performance")
     
-    # ✅ THEME-AWARE METRICS - Light/Dark rendu lo work avthundi
+    # ✅ THEME-AWARE METRICS - st.metric vadina
     col1, col2 = st.columns(2)
     with col1:
         st.metric(label="ROC-AUC", value="0.82")
@@ -174,7 +174,7 @@ if uploaded_file is not None:
 
     st.markdown("---")
 
-    # Section 2: Key Business Metrics - CUSTOM DARK CARDS
+    # Section 2: Key Business Metrics - CUSTOM THEME-AWARE CARDS
     st.markdown("### 📊 2. Key Business Metrics")
     st.write("")
 
@@ -261,12 +261,12 @@ if uploaded_file is not None:
 
     with col2:
         st.markdown("#### Business Insights")
-        st.success(f"**Low Risk:** {risk_counts.get('Low', 0):,} customers\n\nRetention strategies not required")
-        st.warning(f"**Medium Risk:** {risk_counts.get('Medium', 0):,} customers\n\nMonitor closely, offer incentives")
-        st.error(f"**High Risk:** {risk_counts.get('High', 0):,} customers\n\nImmediate retention action needed")
+        st.markdown(f"**🟢 Low Risk:** {risk_counts.get('Low', 0):,} customers\n\nRetention strategies not required")
+        st.markdown(f"**🟡 Medium Risk:** {risk_counts.get('Medium', 0):,} customers\n\nMonitor closely, offer incentives")
+        st.markdown(f"**🔴 High Risk:** {risk_counts.get('High', 0):,} customers\n\nImmediate retention action needed")
         st.markdown("---")
         potential_loss = high_risk_count * 2000
-        st.info(f"**Potential Monthly Loss:** ₹{potential_loss:,.0f}")
+        st.markdown(f"**💰 Potential Monthly Loss:** ₹{potential_loss:,.0f}")
 
     st.markdown("---")
 
@@ -306,7 +306,7 @@ if uploaded_file is not None:
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_copy)
 
-        # Theme-aware plot
+        # Theme-aware plot - transparent background
         fig, ax = plt.subplots(figsize=(10, 6))
         fig.patch.set_alpha(0)
         ax.set_facecolor('none')
@@ -324,7 +324,7 @@ if uploaded_file is not None:
         st.pyplot(fig)
         plt.clf()
 
-    st.info("""
+    st.markdown("""
     **Key Findings:** Contract type, Tenure, and MonthlyCharges are the strongest predictors of churn.
     Month-to-month contracts with low tenure and high charges indicate highest risk.
     """)
@@ -361,8 +361,8 @@ if uploaded_file is not None:
         st.caption("Export data for CRM integration, email campaigns, or retention team follow-up")
 
 else:
-    # Landing page when no file is uploaded
-    st.info("👆 **Upload the Telco Customer Churn CSV file from the sidebar to begin analysis**")
+    # Landing page when no file is uploaded - ✅ THEME-AWARE
+    st.markdown("### 👆 **Upload the Telco Customer Churn CSV file from the sidebar to begin analysis**")
 
     st.markdown("### 🎯 Dashboard Capabilities")
     col1, col2 = st.columns(2)
@@ -388,7 +388,7 @@ else:
         """)
 
     st.markdown("---")
-    st.success("**Model Performance:** Trained on 7,043 customers | ROC-AUC: 0.82 | Accuracy: 79.2%")
+    st.caption("**Model Performance:** Trained on 7,043 customers | ROC-AUC: 0.82 | Accuracy: 79.2%")
 
 # Footer
 st.markdown("---")
