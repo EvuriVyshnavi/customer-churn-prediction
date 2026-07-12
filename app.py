@@ -114,8 +114,8 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("### 🔗 Project Links")
-    st.markdown("[[GitHub Repository](https://github.com)](https://github.com)")
-    st.markdown("[[LinkedIn Profile](https://linkedin.com)](https://linkedin.com)")
+    st.markdown("[[GitHub Repository](https://github.com/EvuriVyshnavi/customer-churn-prediction)](https://github.com/EvuriVyshnavi/customer-churn-prediction)")
+    st.markdown("[[LinkedIn Profile](https://www.linkedin.com/in/evuri-vyshnavi/)](https://www.linkedin.com/in/evuri-vyshnavi/)")
 
 # Helper function for dark mode metric cards
 def metric_card(label, value, delta, delta_color="#999"):
