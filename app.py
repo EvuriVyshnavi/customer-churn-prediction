@@ -1,5 +1,5 @@
 # app.py - Customer Churn Prediction Dashboard
-# Final Version - Beautiful + Theme Aware + SHAP Text Fix
+# Final Version - Theme Aware SHAP Plot Text
 # Tech Stack: XGBoost, SHAP, Streamlit, Plotly
 
 import streamlit as st
@@ -23,7 +23,6 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 
-    /* Gradient Header */
 .main-header {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         -webkit-background-clip: text;
@@ -43,7 +42,6 @@ st.markdown("""
         margin-bottom: 2.5rem;
     }
 
-    /* Gradient Button */
 .stButton>button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -59,7 +57,6 @@ st.markdown("""
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
     }
 
-    /* Beautiful Sidebar Cards */
 .sidebar-card {
         background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
         padding: 1rem;
@@ -94,7 +91,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Header with SVG graph icon
 st.markdown('''
 <p class="main-header">
 <svg width="40" height="40" viewBox="0 0 24 24" style="display:inline; vertical-align:middle; margin-right:10px;">
@@ -295,9 +291,9 @@ if uploaded_file is not None:
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(df_copy)
 
-        # ✅ DYNAMIC THEME-AWARE TEXT COLOR
+        # ✅ THEME DETECTION - DARK = WHITE TEXT, LIGHT = BLACK TEXT
         theme = st.get_option("theme.base")
-        text_color = 'white' if theme == 'dark' else 'black'
+        text_color = '#FFFFFF' if theme == 'dark' else '#000000'
         bar_color = '#667eea'
 
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -306,8 +302,10 @@ if uploaded_file is not None:
 
         shap.summary_plot(shap_values, df_copy, plot_type="bar", show=False, color=bar_color)
 
+        # All text elements use text_color
         plt.title("Top Features Driving Churn Predictions", fontsize=14, pad=20, weight='bold', color=text_color)
         plt.xlabel("Mean |SHAP Value| (Average Impact on Model Output)", fontsize=11, color=text_color)
+
         ax.tick_params(colors=text_color, which='both')
         ax.xaxis.label.set_color(text_color)
         ax.yaxis.label.set_color(text_color)
